@@ -11,6 +11,7 @@ from numpy.core import multiarray as mu
 from numpy.core import umath as um
 from numpy.core.numeric import asanyarray
 from numpy.core import numerictypes as nt
+from numpy.core import numeric as nm
 
 # save those O(100) nanoseconds!
 umr_maximum = um.maximum.reduce
@@ -107,8 +108,6 @@ def _var(a, axis=None, dtype=None, out=None, ddof=0, keepdims=False):
         arrmean = arrmean.dtype.type(arrmean / rcount)
 
     # Compute sum of squared deviations from mean
-    # Note that x may not be inexact and that we need it to be an array,
-    # not a scalar.
     ret = 0
     for i in nm.nditer(arr, order='F'):
         if issubclass(arr.dtype.type, nt.complexfloating):
