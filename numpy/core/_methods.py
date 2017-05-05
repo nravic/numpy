@@ -109,13 +109,12 @@ def _var(a, axis=None, dtype=None, out=None, ddof=0, keepdims=False):
     # Compute sum of squared deviations from mean
     # Note that x may not be inexact and that we need it to be an array,
     # not a scalar.
-    x = asanyarray(arr - arrmean)
-    if issubclass(arr.dtype.type, nt.complexfloating):
-        x = um.multiply(x, um.conjugate(x), out=x).real
-    else:
-        x = um.multiply(x, x, out=x)
-    ret = umr_sum(x, axis, dtype, out, keepdims)
-
+    ret = 0
+    for i in nm.nditer(arr, order='F'):
+        if issubclass(arr.dtype.type, nt.complexfloating):
+            ret += (i-arrmean*um.conjugate(i-arrmean)).real
+        else:
+            ret += (i-arrmean)**2
     # Compute degrees of freedom and make sure it is not negative.
     rcount = max([rcount - ddof, 0])
 
